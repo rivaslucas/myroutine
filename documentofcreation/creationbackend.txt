@@ -1,0 +1,35 @@
+paso 1
+npm init -y
+paso2
+npm install express mysql2 cors dotenv jsonwebtoken google-auth-library node-cron bcryptjs
+paso 3
+npm install --save-dev nodemon
+paso4
+creacion de estructura
+mi-agenda-backend/
+├── src/
+│   ├── config/
+│   │   └── database.js
+│   ├── middleware/
+│   │   └── auth.js
+│   ├── routes/
+│   │   ├── auth.routes.js
+│   │   ├── tasks.routes.js
+│   │   ├── planner.routes.js
+│   │   └── reminders.routes.js
+│   ├── controllers/
+│   │   ├── auth.controller.js
+│   │   ├── tasks.controller.js
+│   │   ├── planner.controller.js
+│   │   └── reminders.controller.js
+│   ├── models/
+│   │   ├── User.js
+│   │   ├── Task.js
+│   │   ├── Reminder.js
+│   │   └── Report.js
+│   ├── cron/
+│   │   └── dailyTasks.js
+│   └── app.js
+├── .env
+├── .gitignore
+└── package.json

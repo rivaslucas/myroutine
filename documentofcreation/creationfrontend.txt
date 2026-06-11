@@ -1,0 +1,26 @@
+cd frontend
+npm install
+npm install @react-oauth/google axios react-router-dom
+npm install -D tailwindcss @tailwindcss/vite
+npm run dev
+
+
+frontend/src/
+├── components/
+│   ├── Navbar.jsx
+│   ├── ProgressBar.jsx
+│   ├── TaskList.jsx
+│   └── ProtectedRoute.jsx
+├── pages/
+│   ├── Login.jsx
+│   ├── Dashboard.jsx
+│   ├── WeeklyPlanner.jsx
+│   ├── MonthlyPlanner.jsx
+│   └── Reminders.jsx
+├── contexts/
+│   └── AuthContext.jsx
+├── services/
+│   └── api.js
+├── App.jsx
+├── App.css
+└── main.jsx
