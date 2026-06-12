@@ -17,22 +17,35 @@ async function generateDailyTasks() {
         
         console.log(`📋 Plantillas encontradas: ${templates.length}`);
         
-        // Crear registros para el día actual
+        // Crear registros para el día actual (SIN DUPLICADOS)
         let created = 0;
+        let skipped = 0;
+        
         for (let template of templates) {
             try {
-                await pool.query(`
-                    INSERT IGNORE INTO daily_task_logs 
-                    (user_id, template_id, task_date) 
-                    VALUES (?, ?, CURDATE())
+                // Verificar si ya existe antes de insertar
+                const [existing] = await pool.query(`
+                    SELECT id FROM daily_task_logs 
+                    WHERE user_id = ? AND template_id = ? AND task_date = CURDATE()
                 `, [template.user_id, template.id]);
-                created++;
+                
+                if (existing.length === 0) {
+                    // No existe, insertar
+                    await pool.query(`
+                        INSERT INTO daily_task_logs 
+                        (user_id, template_id, task_date) 
+                        VALUES (?, ?, CURDATE())
+                    `, [template.user_id, template.id]);
+                    created++;
+                } else {
+                    skipped++;
+                }
             } catch (insertError) {
                 console.error(`Error insertando tarea ${template.id}:`, insertError.message);
             }
         }
         
-        console.log(`✅ Tareas diarias generadas: ${created} registros creados`);
+        console.log(`✅ Tareas diarias generadas: ${created} nuevas, ${skipped} ya existían`);
         
         // También generar reporte si es domingo
         if (dayNumber === 0) {
