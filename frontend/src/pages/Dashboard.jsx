@@ -20,28 +20,35 @@ export default function Dashboard() {
         loadData();
     }, []);
 
-    const loadData = async () => {
-        try {
-            setLoading(true);
+   const loadData = async () => {
+    try {
+        setLoading(true);
+        
+        const tasksRes = await api.get('/tasks/today');
+        console.log('📋 Tareas cargadas:', tasksRes.data);
+        
+        if (tasksRes.data.success) {
+            const loadedTasks = tasksRes.data.tasks || [];
+            setTasks(loadedTasks);
             
-            const tasksRes = await api.get('/tasks/today');
-            if (tasksRes.data.success) {
-                setTasks(tasksRes.data.tasks || []);
-            }
-            
-            const progressRes = await api.get('/tasks/progress/today');
-            if (progressRes.data.success?.progress) {
-                const pct = parseFloat(progressRes.data.progress.progress_percentage);
-                setProgress(isNaN(pct) ? 0 : pct);
-                setProgressBreakdown(progressRes.data.progress.breakdown || null);
-            }
-        } catch (error) {
-            console.error('Error cargando datos:', error);
-        } finally {
-            setLoading(false);
+            // Calcular progreso localmente también
+            const completed = loadedTasks.filter(t => t.completed).length;
+            const total = loadedTasks.length;
+            const pct = total > 0 ? (completed / total) * 100 : 0;
+            setProgress(pct);
         }
-    };
-
+        
+        // También obtener del servidor por si hay diferencias
+        const progressRes = await api.get('/tasks/progress/today');
+        if (progressRes.data.success?.progress) {
+            setProgressBreakdown(progressRes.data.progress.breakdown || null);
+        }
+    } catch (error) {
+        console.error('Error cargando datos:', error);
+    } finally {
+        setLoading(false);
+    }
+};
     const handleToggle = async (taskId, source) => {
     console.log('🔄 Toggle:', taskId, source);
     
@@ -73,31 +80,30 @@ export default function Dashboard() {
     }
 };
     const handleCreateTemplate = async (e) => {
-        e.preventDefault();
-        try {
-            await api.post('/tasks/template', newTemplate);
-            setShowForm(false);
-            setNewTemplate({ task_name: '', scheduled_time: '', days_of_week: [1, 2, 3, 4, 5, 6, 7] });
-            alert('✅ Plantilla creada correctamente');
-        } catch (error) {
-            console.error('Error creando plantilla:', error);
-            alert('Error al crear plantilla');
+    e.preventDefault();
+    try {
+        await api.post('/tasks/template', newTemplate);
+        setShowForm(false);
+        setNewTemplate({ task_name: '', scheduled_time: '', days_of_week: [1, 2, 3, 4, 5, 6, 7] });
+        alert('✅ Plantilla creada correctamente');
+        await loadData(); // Recargar para actualizar progreso
+    } catch (error) {
+        console.error('Error creando plantilla:', error);
+        alert('Error al crear plantilla');
+    }
+};
+  const generateTodayTasks = async () => {
+    try {
+        const response = await api.post('/tasks/generate-today');
+        if (response.data.success) {
+            alert('✅ ' + response.data.message);
+            await loadData(); // Recargar todo del servidor
         }
-    };
-
-    const generateTodayTasks = async () => {
-        try {
-            const response = await api.post('/tasks/generate-today');
-            if (response.data.success) {
-                alert('✅ ' + response.data.message);
-                loadData();
-            }
-        } catch (error) {
-            console.error('Error generando tareas:', error);
-            alert('❌ Error al generar tareas');
-        }
-    };
-
+    } catch (error) {
+        console.error('Error generando tareas:', error);
+        alert('❌ Error al generar tareas');
+    }
+};
     const toggleDay = (day) => {
         setNewTemplate(prev => ({
             ...prev,
