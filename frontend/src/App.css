@@ -7,4 +7,75 @@
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
     background-color: #f3f4f6;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Scroll suave */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Evitar zoom en inputs en iOS */
+input, select, textarea, button {
+    font-size: 16px !important;
+}
+
+/* Scroll horizontal suave para el plan semanal */
+.scroll-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x proximity;
+    padding-bottom: 8px;
+}
+
+.scroll-container::-webkit-scrollbar {
+    height: 4px;
+}
+
+.scroll-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+/* Mejoras responsive */
+@media (max-width: 768px) {
+    body {
+        font-size: 14px;
+    }
+    
+    h1 {
+        font-size: 20px !important;
+    }
+    
+    h2 {
+        font-size: 17px !important;
+    }
+    
+    h3 {
+        font-size: 15px !important;
+    }
+
+    button, 
+    input[type="submit"],
+    .clickable {
+        min-height: 42px;
+        cursor: pointer;
+    }
+
+    input, select, textarea {
+        font-size: 16px !important;
+        padding: 10px 12px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    h1 {
+        font-size: 18px !important;
+    }
 }

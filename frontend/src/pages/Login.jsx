@@ -6,213 +6,68 @@ export default function Login() {
 
     return (
         <div style={{
-            minHeight: '100vh',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+            minHeight: '100vh', minHeight: '100dvh',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
             background: 'linear-gradient(135deg, #1E3A5F 0%, #2D5A8E 30%, #4F46E5 70%, #7C3AED 100%)',
-            position: 'relative',
-            overflow: 'hidden',
-            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+            padding: '16px', position: 'relative', overflow: 'hidden'
         }}>
-            {/* Círculos decorativos de fondo */}
-            <div style={{
-                position: 'absolute',
-                top: '-100px',
-                right: '-100px',
-                width: '400px',
-                height: '400px',
-                borderRadius: '50%',
-                background: 'rgba(255,255,255,0.03)',
-                pointerEvents: 'none'
-            }} />
-            <div style={{
-                position: 'absolute',
-                bottom: '-150px',
-                left: '-50px',
-                width: '500px',
-                height: '500px',
-                borderRadius: '50%',
-                background: 'rgba(255,255,255,0.03)',
-                pointerEvents: 'none'
-            }} />
-            <div style={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                width: '600px',
-                height: '600px',
-                borderRadius: '50%',
-                background: 'rgba(255,255,255,0.02)',
-                pointerEvents: 'none'
-            }} />
+            <div style={{ position: 'absolute', top: '-60px', right: '-60px', width: '200px', height: '200px', borderRadius: '50%', background: 'rgba(255,255,255,0.03)' }} />
+            <div style={{ position: 'absolute', bottom: '-60px', left: '-30px', width: '200px', height: '200px', borderRadius: '50%', background: 'rgba(255,255,255,0.03)' }} />
 
-            {/* Contenedor principal */}
             <div style={{
-                backgroundColor: 'white',
-                borderRadius: '24px',
-                padding: '48px 40px',
-                width: '440px',
-                maxWidth: '90%',
-                boxShadow: '0 25px 80px rgba(0,0,0,0.3)',
-                position: 'relative',
-                zIndex: 1,
-                textAlign: 'center'
+                backgroundColor: 'white', borderRadius: '20px',
+                padding: 'clamp(24px, 5vw, 40px)', width: '100%', maxWidth: '400px',
+                boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
+                textAlign: 'center', position: 'relative', zIndex: 1
             }}>
-                
-                {/* Logo / Icono */}
                 <div style={{
-                    width: '80px',
-                    height: '80px',
-                    borderRadius: '20px',
-                    background: 'linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    margin: '0 auto 24px',
-                    boxShadow: '0 10px 30px rgba(79, 70, 229, 0.3)'
+                    width: 'clamp(50px, 10vw, 70px)', height: 'clamp(50px, 10vw, 70px)',
+                    borderRadius: '16px', background: 'linear-gradient(135deg, #4F46E5 0%, #7C3AED 100%)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    margin: '0 auto 16px', boxShadow: '0 8px 24px rgba(79, 70, 229, 0.3)'
                 }}>
-                    <span style={{ fontSize: '40px' }}>📋</span>
+                    <span style={{ fontSize: 'clamp(24px, 5vw, 34px)' }}>📋</span>
                 </div>
 
-                {/* Título */}
-                <h1 style={{
-                    fontSize: '32px',
-                    fontWeight: '800',
-                    color: '#1F2937',
-                    margin: '0 0 8px 0',
-                    letterSpacing: '-0.5px'
-                }}>
+                <h1 style={{ fontSize: 'clamp(22px, 4vw, 28px)', fontWeight: '800', color: '#1F2937', margin: '0 0 4px 0' }}>
                     MiAgenda
                 </h1>
-                
-                {/* Subtítulo */}
-                <p style={{
-                    fontSize: '16px',
-                    color: '#6B7280',
-                    margin: '0 0 32px 0',
-                    lineHeight: '1.5'
-                }}>
-                    Organiza tu rutina diaria, semanal y mensual<br />
-                    en un solo lugar
+                <p style={{ fontSize: 'clamp(13px, 2.5vw, 15px)', color: '#6B7280', margin: '0 0 20px 0', lineHeight: '1.4' }}>
+                    Organiza tu rutina diaria, semanal y mensual en un solo lugar
                 </p>
 
-                {/* Separador decorativo */}
-                <div style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '12px',
-                    marginBottom: '32px'
-                }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '20px' }}>
                     <div style={{ flex: 1, height: '1px', backgroundColor: '#E5E7EB' }} />
-                    <span style={{ color: '#D1D5DB', fontSize: '13px', fontWeight: '500' }}>
-                        INICIAR SESIÓN
-                    </span>
+                    <span style={{ color: '#D1D5DB', fontSize: '11px', fontWeight: '500' }}>INICIAR SESIÓN</span>
                     <div style={{ flex: 1, height: '1px', backgroundColor: '#E5E7EB' }} />
                 </div>
 
-                {/* Botón de Google */}
-                <div style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    marginBottom: '28px',
-                    transform: 'scale(1.15)',
-                    transformOrigin: 'center'
-                }}>
+                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '16px' }}>
                     <GoogleLogin
-                        onSuccess={credentialResponse => {
-                            login(credentialResponse.credential);
-                        }}
-                        onError={() => {
-                            console.log('Login Failed');
-                        }}
-                        size="large"
-                        shape="pill"
-                        text="signin_with"
-                        theme="outline"
+                        onSuccess={credentialResponse => login(credentialResponse.credential)}
+                        onError={() => console.log('Login Failed')}
+                        size="large" shape="pill" text="signin_with" theme="outline"
                     />
                 </div>
 
-                {/* Características */}
-                <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: '1fr 1fr',
-                    gap: '12px',
-                    textAlign: 'left',
-                    marginTop: '8px'
-                }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px', textAlign: 'left' }}>
                     {[
-                        { icon: '✅', text: 'Tareas diarias', desc: 'Seguimiento hora a hora' },
-                        { icon: '📊', text: 'Plan semanal', desc: 'Organiza tu semana' },
-                        { icon: '📆', text: 'Vista mensual', desc: 'Planifica el mes' },
-                        { icon: '🔔', text: 'Recordatorios', desc: 'Pagos y citas' },
-                        { icon: '📈', text: 'Reportes', desc: 'Progreso semanal' },
-                        { icon: '🔄', text: 'Recurrencia', desc: 'Tareas automáticas' }
-                    ].map((feature, index) => (
-                        <div
-                            key={index}
-                            style={{
-                                display: 'flex',
-                                alignItems: 'flex-start',
-                                gap: '10px',
-                                padding: '10px 12px',
-                                borderRadius: '10px',
-                                backgroundColor: '#F9FAFB',
-                                transition: 'all 0.2s'
-                            }}
-                            onMouseEnter={(e) => {
-                                e.currentTarget.style.backgroundColor = '#F3F4F6';
-                                e.currentTarget.style.transform = 'translateY(-1px)';
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.style.backgroundColor = '#F9FAFB';
-                                e.currentTarget.style.transform = 'translateY(0)';
-                            }}
-                        >
-                            <span style={{ fontSize: '20px', flexShrink: 0, marginTop: '1px' }}>
-                                {feature.icon}
-                            </span>
-                            <div>
-                                <div style={{ 
-                                    fontSize: '13px', 
-                                    fontWeight: '600', 
-                                    color: '#374151',
-                                    marginBottom: '2px'
-                                }}>
-                                    {feature.text}
-                                </div>
-                                <div style={{ 
-                                    fontSize: '11px', 
-                                    color: '#9CA3AF'
-                                }}>
-                                    {feature.desc}
-                                </div>
-                            </div>
+                        { icon: '✅', text: 'Tareas diarias' },
+                        { icon: '📊', text: 'Plan semanal' },
+                        { icon: '📆', text: 'Vista mensual' },
+                        { icon: '🔔', text: 'Recordatorios' },
+                        { icon: '📈', text: 'Reportes' },
+                        { icon: '🔄', text: 'Recurrencia' }
+                    ].map((f, i) => (
+                        <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '6px 8px', borderRadius: '8px', backgroundColor: '#F9FAFB', fontSize: '12px' }}>
+                            <span style={{ fontSize: '14px' }}>{f.icon}</span>
+                            <span style={{ fontWeight: '500', color: '#374151' }}>{f.text}</span>
                         </div>
                     ))}
                 </div>
 
-                {/* Footer */}
-                <div style={{
-                    marginTop: '28px',
-                    paddingTop: '20px',
-                    borderTop: '1px solid #F3F4F6'
-                }}>
-                    <p style={{
-                        fontSize: '12px',
-                        color: '#D1D5DB',
-                        margin: 0
-                    }}>
-                        🔒 Inicio de sesión seguro con Google
-                    </p>
-                    <p style={{
-                        fontSize: '11px',
-                        color: '#E5E7EB',
-                        margin: '4px 0 0 0'
-                    }}>
-                        Tus datos están protegidos
-                    </p>
+                <div style={{ marginTop: '16px', paddingTop: '12px', borderTop: '1px solid #F3F4F6' }}>
+                    <p style={{ fontSize: '10px', color: '#D1D5DB', margin: 0 }}>🔒 Inicio de sesión seguro con Google</p>
                 </div>
             </div>
         </div>
