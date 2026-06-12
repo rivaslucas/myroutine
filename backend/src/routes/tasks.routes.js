@@ -9,6 +9,9 @@ router.use(authMiddleware);
 // Obtener tareas del día actual
 router.get('/today', tasksController.getTodayTasks);
 
+// Generar tareas para hoy manualmente
+router.post('/generate-today', tasksController.generateTodayTasks);
+
 // Marcar/desmarcar tarea como completada
 router.put('/:id/toggle', tasksController.toggleTask);
 
@@ -21,6 +24,10 @@ router.get('/templates', tasksController.getTemplates);
 // Obtener progreso diario
 router.get('/progress/today', tasksController.getDailyProgress);
 
-router.post('/generate-today', tasksController.generateTodayTasks);
-// IMPORTANTE: Exportar el router
+// Eliminar tarea diaria
+router.delete('/:id', tasksController.deleteTask);
+
+// Eliminar plantilla
+router.delete('/template/:id', tasksController.deleteTemplate);
+
 module.exports = router;

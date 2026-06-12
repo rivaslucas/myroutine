@@ -276,8 +276,7 @@ const tasksController = {
     },
     
     // Obtener progreso diario (incluye todas las fuentes)
-   // Obtener progreso diario (incluye todas las fuentes)
-getDailyProgress: async (req, res) => {
+ getDailyProgress: async (req, res) => {
     try {
         const userId = req.user.id;
         const today = new Date();
@@ -372,6 +371,74 @@ getDailyProgress: async (req, res) => {
         res.status(500).json({
             success: false,
             message: 'Error al obtener progreso',
+            error: error.message
+        });
+    }
+},
+// Eliminar tarea diaria
+deleteTask: async (req, res) => {
+    try {
+        const { id } = req.params;
+        const userId = req.user.id;
+        
+        const [result] = await pool.query(
+            'DELETE FROM daily_task_logs WHERE id = ? AND user_id = ?',
+            [id, userId]
+        );
+        
+        if (result.affectedRows === 0) {
+            return res.status(404).json({
+                success: false,
+                message: 'Tarea no encontrada'
+            });
+        }
+        
+        res.json({
+            success: true,
+            message: 'Tarea eliminada correctamente'
+        });
+        
+    } catch (error) {
+        console.error('❌ Error eliminando tarea:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error al eliminar tarea',
+            error: error.message
+        });
+    }
+},
+
+// Eliminar plantilla
+deleteTemplate: async (req, res) => {
+    try {
+        const { id } = req.params;
+        const userId = req.user.id;
+        
+        // Eliminar plantilla y sus registros diarios
+        await pool.query('DELETE FROM daily_task_logs WHERE template_id = ? AND user_id = ?', [id, userId]);
+        
+        const [result] = await pool.query(
+            'DELETE FROM daily_task_templates WHERE id = ? AND user_id = ?',
+            [id, userId]
+        );
+        
+        if (result.affectedRows === 0) {
+            return res.status(404).json({
+                success: false,
+                message: 'Plantilla no encontrada'
+            });
+        }
+        
+        res.json({
+            success: true,
+            message: 'Plantilla y sus registros eliminados'
+        });
+        
+    } catch (error) {
+        console.error('❌ Error eliminando plantilla:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error al eliminar plantilla',
             error: error.message
         });
     }

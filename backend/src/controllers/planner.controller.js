@@ -102,6 +102,27 @@ const plannerController = {
         }
     },
 
+    // 🆕 Eliminar plan mensual
+    deleteMonthlyPlan: async (req, res) => {
+        try {
+            const { id } = req.params;
+            const userId = req.user.id;
+            
+            const [result] = await pool.query(
+                'DELETE FROM monthly_plans WHERE id = ? AND user_id = ?',
+                [id, userId]
+            );
+            
+            if (result.affectedRows === 0) {
+                return res.status(404).json({ success: false, message: 'Plan no encontrado' });
+            }
+            
+            res.json({ success: true, message: 'Plan mensual eliminado' });
+        } catch (error) {
+            res.status(500).json({ success: false, message: error.message });
+        }
+    },
+
     // Obtener reporte semanal
     getWeeklyReport: async (req, res) => {
         try {
