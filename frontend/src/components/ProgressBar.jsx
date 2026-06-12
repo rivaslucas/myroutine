@@ -1,31 +1,56 @@
-export default function ProgressBar({ progress }) {
-    // Asegurar que progress sea un número
+export default function ProgressBar({ progress, breakdown }) {
     const progressValue = typeof progress === 'number' ? progress : parseFloat(progress) || 0;
     
     const getColor = () => {
-        if (progressValue >= 80) return 'bg-green-500';
-        if (progressValue >= 50) return 'bg-yellow-500';
-        return 'bg-red-500';
+        if (progressValue >= 80) return '#10B981';
+        if (progressValue >= 50) return '#F59E0B';
+        return '#EF4444';
     };
 
     return (
-        <div className="bg-white rounded-lg shadow-md p-6">
-            <div className="flex justify-between mb-2">
-                <span className="text-sm font-medium text-gray-700">
+        <div style={{
+            backgroundColor: 'white',
+            borderRadius: '12px',
+            padding: '16px',
+            marginBottom: '14px',
+            boxShadow: '0 1px 4px rgba(0,0,0,0.08)'
+        }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                <span style={{ fontWeight: '600', color: '#374151', fontSize: '15px' }}>
                     Progreso del día
                 </span>
-                <span className="text-sm font-bold text-gray-700">
+                <span style={{ fontWeight: '700', fontSize: '22px', color: getColor() }}>
                     {progressValue.toFixed(1)}%
                 </span>
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-4">
-                <div
-                    className={`${getColor()} h-4 rounded-full transition-all duration-500`}
-                    style={{ width: `${Math.min(progressValue, 100)}%` }}
-                />
+            
+            <div style={{
+                width: '100%',
+                height: '20px',
+                backgroundColor: '#E5E7EB',
+                borderRadius: '10px',
+                overflow: 'hidden',
+                marginBottom: '8px'
+            }}>
+                <div style={{
+                    width: `${Math.min(progressValue, 100)}%`,
+                    height: '100%',
+                    backgroundColor: getColor(),
+                    borderRadius: '10px',
+                    transition: 'width 0.6s ease'
+                }} />
             </div>
+            
+            {breakdown && (
+                <div style={{ display: 'flex', gap: '10px', fontSize: '12px', color: '#6B7280', flexWrap: 'wrap' }}>
+                    <span>📋 {breakdown.daily?.completed || 0}/{breakdown.daily?.total || 0} diarias</span>
+                    <span>📊 {breakdown.weekly?.completed || 0}/{breakdown.weekly?.total || 0} semanales</span>
+                    <span>📆 {breakdown.monthly?.completed || 0}/{breakdown.monthly?.total || 0} mensuales</span>
+                </div>
+            )}
+            
             {progressValue === 100 && (
-                <p className="text-green-600 font-semibold mt-2 text-center">
+                <p style={{ color: '#10B981', fontWeight: '600', textAlign: 'center', marginTop: '8px' }}>
                     🎉 ¡Todas las tareas completadas!
                 </p>
             )}

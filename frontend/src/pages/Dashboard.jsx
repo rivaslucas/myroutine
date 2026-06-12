@@ -1,156 +1,8 @@
 import { useState, useEffect } from 'react';
 import api from '../services/api';
+import ProgressBar from '../components/ProgressBar';
+import TaskList from '../components/TaskList';
 
-// Componente ProgressBar inline
-function ProgressBar({ progress, breakdown }) {
-    const progressValue = typeof progress === 'number' ? progress : parseFloat(progress) || 0;
-    
-    const getColor = () => {
-        if (progressValue >= 80) return '#10B981';
-        if (progressValue >= 50) return '#F59E0B';
-        return '#EF4444';
-    };
-
-    return (
-        <div style={{
-            backgroundColor: 'white',
-            borderRadius: '12px',
-            padding: '16px',
-            marginBottom: '14px',
-            boxShadow: '0 1px 4px rgba(0,0,0,0.08)'
-        }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
-                <span style={{ fontWeight: '600', color: '#374151', fontSize: '15px' }}>
-                    Progreso del día
-                </span>
-                <span style={{ fontWeight: '700', fontSize: '22px', color: getColor() }}>
-                    {progressValue.toFixed(1)}%
-                </span>
-            </div>
-            
-            <div style={{
-                width: '100%',
-                height: '20px',
-                backgroundColor: '#E5E7EB',
-                borderRadius: '10px',
-                overflow: 'hidden',
-                marginBottom: '8px'
-            }}>
-                <div style={{
-                    width: `${Math.min(progressValue, 100)}%`,
-                    height: '100%',
-                    backgroundColor: getColor(),
-                    borderRadius: '10px',
-                    transition: 'width 0.6s ease'
-                }} />
-            </div>
-            
-            {breakdown && (
-                <div style={{ display: 'flex', gap: '10px', fontSize: '12px', color: '#6B7280', flexWrap: 'wrap' }}>
-                    <span>📋 {breakdown.daily?.completed || 0}/{breakdown.daily?.total || 0} diarias</span>
-                    <span>📊 {breakdown.weekly?.completed || 0}/{breakdown.weekly?.total || 0} semanales</span>
-                    <span>📆 {breakdown.monthly?.completed || 0}/{breakdown.monthly?.total || 0} mensuales</span>
-                </div>
-            )}
-            
-            {progressValue === 100 && (
-                <p style={{ color: '#10B981', fontWeight: '600', textAlign: 'center', marginTop: '8px' }}>
-                    🎉 ¡Todas las tareas completadas!
-                </p>
-            )}
-        </div>
-    );
-}
-
-// Componente TaskList inline
-function TaskList({ tasks, onToggle }) {
-    const getSourceLabel = (s) => ({ daily: 'Diaria', weekly: 'Semanal', monthly: 'Mensual' }[s] || '');
-    const getSourceColor = (s) => ({ daily: '#3B82F6', weekly: '#8B5CF6', monthly: '#EC4899' }[s] || '#6B7280');
-
-    if (tasks.length === 0) {
-        return (
-            <div style={{ textAlign: 'center', padding: '30px 10px' }}>
-                <p style={{ fontSize: '16px', color: '#6B7280', marginBottom: '10px' }}>📭 No hay tareas para hoy</p>
-            </div>
-        );
-    }
-
-    return (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            {tasks.map(task => (
-                <div
-                    key={`${task.source}-${task.id}`}
-                    onClick={() => onToggle(task.id, task.source)}
-                    style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        padding: '12px',
-                        borderRadius: '10px',
-                        cursor: 'pointer',
-                        border: task.completed ? '2px solid #A7F3D0' : '1px solid #E5E7EB',
-                        backgroundColor: task.completed ? '#ECFDF5' : '#F9FAFB',
-                        flexWrap: 'wrap',
-                        gap: '8px',
-                        transition: 'all 0.2s'
-                    }}
-                >
-                    {/* Checkbox */}
-                    <div style={{
-                        width: '22px',
-                        height: '22px',
-                        borderRadius: '6px',
-                        border: task.completed ? '2px solid #10B981' : '2px solid #D1D5DB',
-                        backgroundColor: task.completed ? '#10B981' : 'white',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        flexShrink: 0
-                    }}>
-                        {task.completed && (
-                            <span style={{ color: 'white', fontSize: '14px', fontWeight: 'bold' }}>✓</span>
-                        )}
-                    </div>
-                    
-                    {/* Nombre */}
-                    <span style={{
-                        fontSize: '15px',
-                        fontWeight: '500',
-                        flex: 1,
-                        minWidth: '100px',
-                        textDecoration: task.completed ? 'line-through' : 'none',
-                        color: task.completed ? '#9CA3AF' : '#1F2937'
-                    }}>
-                        {task.icon || '📋'} {task.task_name}
-                    </span>
-                    
-                    {/* Etiqueta de tipo */}
-                    <span style={{
-                        fontSize: '10px',
-                        padding: '3px 8px',
-                        borderRadius: '12px',
-                        backgroundColor: `${getSourceColor(task.source)}20`,
-                        color: getSourceColor(task.source),
-                        fontWeight: '600',
-                        whiteSpace: 'nowrap'
-                    }}>
-                        {getSourceLabel(task.source)}
-                    </span>
-                    
-                    {/* Hora */}
-                    {task.scheduled_time && (
-                        <span style={{ fontSize: '12px', color: '#6B7280' }}>
-                            🕐 {task.scheduled_time.substring(0, 5)}
-                        </span>
-                    )}
-                    
-                    {task.completed && <span style={{ fontSize: '18px' }}>✅</span>}
-                </div>
-            ))}
-        </div>
-    );
-}
-
-// Componente principal Dashboard
 export default function Dashboard() {
     const [tasks, setTasks] = useState([]);
     const [progress, setProgress] = useState(0);
@@ -191,29 +43,29 @@ export default function Dashboard() {
     };
 
     const handleToggle = async (taskId, source) => {
-        if (updating) return; // Evitar doble click
+        if (updating) return;
+        
+        // Actualizar visualmente al instante
+        setTasks(prevTasks => 
+            prevTasks.map(task => 
+                task.id === taskId && task.source === source
+                    ? { ...task, completed: !task.completed }
+                    : task
+            )
+        );
+        
+        setUpdating(true);
         
         try {
-            setUpdating(true);
-            
-            // Actualizar optimistamente (antes de la respuesta del server)
-            setTasks(prevTasks => 
-                prevTasks.map(task => 
-                    task.id === taskId && task.source === source
-                        ? { ...task, completed: !task.completed }
-                        : task
-                )
-            );
-            
             await api.put(`/tasks/${taskId}/toggle`, { source: source || 'daily' });
-            
-            // Recargar datos reales del server
-            await loadData();
+            // Recargar del servidor para asegurar datos correctos
+            setTimeout(() => {
+                loadData();
+                setUpdating(false);
+            }, 300);
         } catch (error) {
             console.error('Error al marcar tarea:', error);
-            // Revertir si hay error
             loadData();
-        } finally {
             setUpdating(false);
         }
     };
