@@ -88,26 +88,18 @@ export default function Dashboard() {
     };
 
     // CREAR PLANTILLA Y AUTO-GENERAR
-  const handleCreateTemplate = async (e) => {
+ const handleCreateTemplate = async (e) => {
     e.preventDefault();
-    
-    // Evitar doble envío
     if (updating) return;
     setUpdating(true);
     
     try {
-        // 1. Crear la plantilla (UNA SOLA VEZ)
+        // SOLO crear la plantilla, sin generar tareas
         await api.post('/tasks/template', newTemplate);
         
-        // 2. Generar tareas para hoy (UNA SOLA VEZ)
-        await api.post('/tasks/generate-today');
-        
-        // 3. Limpiar formulario
         setShowForm(false);
         setNewTemplate({ task_name: '', scheduled_time: '', days_of_week: [1, 2, 3, 4, 5, 6, 7] });
-        
-        // 4. Recargar datos
-        await loadData();
+        alert('✅ Plantilla creada. Usa "Generar" para crear las tareas de hoy.');
         
     } catch (error) {
         console.error('Error:', error);
