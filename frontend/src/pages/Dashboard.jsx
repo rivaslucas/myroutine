@@ -92,12 +92,29 @@ export default function Dashboard() {
         alert('Error al crear plantilla');
     }
 };
-  const generateTodayTasks = async () => {
+const generateTodayTasks = async () => {
     try {
         const response = await api.post('/tasks/generate-today');
         if (response.data.success) {
+            // Recargar todo desde el servidor
+            const tasksRes = await api.get('/tasks/today');
+            if (tasksRes.data.success) {
+                const newTasks = tasksRes.data.tasks || [];
+                setTasks(newTasks);
+                
+                // CALCULAR PROGRESO INMEDIATAMENTE
+                const completed = newTasks.filter(t => t.completed).length;
+                const total = newTasks.length;
+                const newProgress = total > 0 ? (completed / total) * 100 : 0;
+                setProgress(newProgress);
+                
+                // También actualizar breakdown
+                const progressRes = await api.get('/tasks/progress/today');
+                if (progressRes.data.success?.progress) {
+                    setProgressBreakdown(progressRes.data.progress.breakdown || null);
+                }
+            }
             alert('✅ ' + response.data.message);
-            await loadData(); // Recargar todo del servidor
         }
     } catch (error) {
         console.error('Error generando tareas:', error);
