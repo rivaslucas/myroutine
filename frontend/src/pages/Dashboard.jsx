@@ -43,33 +43,35 @@ export default function Dashboard() {
     };
 
     const handleToggle = async (taskId, source) => {
-        if (updating) return;
-        
-        // Actualizar visualmente al instante
-        setTasks(prevTasks => 
-            prevTasks.map(task => 
-                task.id === taskId && task.source === source
-                    ? { ...task, completed: !task.completed }
-                    : task
-            )
+    console.log('🔄 Toggle:', taskId, source);
+    
+    // Actualizar tareas visualmente
+    setTasks(prevTasks => {
+        const newTasks = prevTasks.map(task => 
+            task.id === taskId && task.source === source
+                ? { ...task, completed: !task.completed }
+                : task
         );
+        console.log('📋 Completadas:', newTasks.filter(t => t.completed).length, '/', newTasks.length);
         
-        setUpdating(true);
+        // Calcular progreso manualmente
+        const completed = newTasks.filter(t => t.completed).length;
+        const total = newTasks.length;
+        const newProgress = total > 0 ? (completed / total) * 100 : 0;
+        console.log('📊 Nuevo progreso:', newProgress);
+        setProgress(newProgress);
         
-        try {
-            await api.put(`/tasks/${taskId}/toggle`, { source: source || 'daily' });
-            // Recargar del servidor para asegurar datos correctos
-            setTimeout(() => {
-                loadData();
-                setUpdating(false);
-            }, 300);
-        } catch (error) {
-            console.error('Error al marcar tarea:', error);
-            loadData();
-            setUpdating(false);
-        }
-    };
-
+        return newTasks;
+    });
+    
+    try {
+        const response = await api.put(`/tasks/${taskId}/toggle`, { source: source || 'daily' });
+        console.log('✅ Server:', response.data);
+    } catch (error) {
+        console.error('❌ Error:', error);
+        loadData();
+    }
+};
     const handleCreateTemplate = async (e) => {
         e.preventDefault();
         try {
